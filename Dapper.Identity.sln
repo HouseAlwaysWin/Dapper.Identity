@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30204.135
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dapper.Identity", "Dapper.Identity.csproj", "{3984E43B-EB61-45EE-AC8D-5D31013A8985}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dapper.Identity", "Dapper.Identity\Dapper.Identity.csproj", "{F6813CC8-65A5-4ABD-B660-241388578A90}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dapper.Identity.Sample", "..\Dapper.Identity.Sample\Dapper.Identity.Sample.csproj", "{99A5A889-245A-491B-BFD6-2895791EB484}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dapper.Identity.Sample", "..\Dapper.Identity.Sample\Dapper.Identity.Sample.csproj", "{44FF7731-702B-433B-82C8-558E3576C2B9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3984E43B-EB61-45EE-AC8D-5D31013A8985}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3984E43B-EB61-45EE-AC8D-5D31013A8985}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3984E43B-EB61-45EE-AC8D-5D31013A8985}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3984E43B-EB61-45EE-AC8D-5D31013A8985}.Release|Any CPU.Build.0 = Release|Any CPU
-		{99A5A889-245A-491B-BFD6-2895791EB484}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{99A5A889-245A-491B-BFD6-2895791EB484}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{99A5A889-245A-491B-BFD6-2895791EB484}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{99A5A889-245A-491B-BFD6-2895791EB484}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6813CC8-65A5-4ABD-B660-241388578A90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6813CC8-65A5-4ABD-B660-241388578A90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6813CC8-65A5-4ABD-B660-241388578A90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6813CC8-65A5-4ABD-B660-241388578A90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44FF7731-702B-433B-82C8-558E3576C2B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44FF7731-702B-433B-82C8-558E3576C2B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44FF7731-702B-433B-82C8-558E3576C2B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44FF7731-702B-433B-82C8-558E3576C2B9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
