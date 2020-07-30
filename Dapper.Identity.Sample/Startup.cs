@@ -28,11 +28,8 @@ namespace Dapper.Identity.Sample
             services.AddIdentity<IdentityUser, ExtendedIdentityRole>()
                 .AddDapperStores(options =>
                 {
+                    //options.DbConnectionFactory = new PostgreSqlDbConnectionFactory();
                     options.AddRolesTable<ExtendedRolesTable, ExtendedIdentityRole>();
-                }, new DapperStoreOptions
-                {
-                    ConnectionString = "",
-                    DbConnectionFactory = new PostgreSqlDbConnectionFactory()
                 });
             services.AddControllersWithViews();
         }

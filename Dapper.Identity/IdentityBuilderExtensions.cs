@@ -1,4 +1,5 @@
 ﻿using Dapper.Identity.Abstract;
+using Dapper.Identity.Adapters;
 using Dapper.Identity.Stores;
 using Dapper.Identity.Tables;
 using Microsoft.AspNetCore.Identity;
@@ -6,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Reflection;
 
 namespace Dapper.Identity
@@ -16,20 +19,30 @@ namespace Dapper.Identity
     public static class IdentityBuilderExtensions
     {
 
-
+        private static readonly ISqlAdapter DefaultAdapter = new SqlServerAdapter();
+        private static readonly Dictionary<string, ISqlAdapter> AdapterDictionary
+            = new Dictionary<string, ISqlAdapter>
+            {
+                ["SqlServerDbConnectionFactory"] = new SqlServerAdapter(),
+                //["sqlceconnection"] = new SqlCeServerAdapter(),
+                ["PostgreSqlDbConnectionFactory"] = new PostgresAdapter(),
+                //["sqliteconnection"] = new SQLiteAdapter(),
+                //["mysqlconnection"] = new MySqlAdapter(),
+                //["fbconnection"] = new FbAdapter()
+            };
         /// <summary>
         /// Adds a Dapper implementation of ASP.NET Core Identity stores.
         /// </summary>
         /// <param name="builder">Helper functions for configuring identity services.</param>
         /// <param name="configureAction">Delegate for configuring options </param>
         /// <returns>The <see cref="IdentityBuilder"/> instance this method extends.</returns>
-        public static IdentityBuilder AddDapperStores(this IdentityBuilder builder, Action<DapperStoreOptions> configureAction = null, DapperStoreOptions dbconnectionInfo = null)
+        public static IdentityBuilder AddDapperStores(this IdentityBuilder builder, Action<DapperStoreOptions> configureAction = null)
         {
-            AddStores(builder.Services, builder.UserType, builder.RoleType, configureAction, dbconnectionInfo);
+            AddStores(builder.Services, builder.UserType, builder.RoleType, configureAction);
             return builder;
         }
 
-        private static void AddStores(IServiceCollection services, Type userType, Type roleType, Action<DapperStoreOptions> configureAction = null, DapperStoreOptions dbconnectionInfo = null)
+        private static void AddStores(IServiceCollection services, Type userType, Type roleType, Action<DapperStoreOptions> configureAction = null)
         {
             var identityUserType = FindGenericBaseType(userType, typeof(IdentityUser<>));
             if (identityUserType == null)
@@ -39,31 +52,32 @@ namespace Dapper.Identity
             var serviceProvider = services.BuildServiceProvider();
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
-            DapperStoreOptions dbConnectionContextOptions = null;
-            if (dbconnectionInfo != null)
+            var dbConnectionContextOptions = new DapperStoreOptions
             {
-                dbConnectionContextOptions = new DapperStoreOptions
-                {
-                    ConnectionString = configuration.GetConnectionString("DefaultConnection"),
-                    DbConnectionFactory = new SqlServerDbConnectionFactory(),
-                    Services = services
-                };
-            }
-            else
-            {
-                dbconnectionInfo.Services = services;
-                dbConnectionContextOptions = dbconnectionInfo;
-            }
+                ConnectionString = configuration.GetConnectionString("DefaultConnection"),
+                DbConnectionFactory = new SqlServerDbConnectionFactory(),
+                Services = services
+            };
 
 
             configureAction?.Invoke(dbConnectionContextOptions);
             dbConnectionContextOptions.Services = null;
 
+            var dbConnectionFactoryInstance = (IDbConnectionFactory)Activator.CreateInstance(dbConnectionContextOptions.DbConnectionFactory.GetType());
+            dbConnectionFactoryInstance.ConnectionString = dbConnectionContextOptions.ConnectionString;
+
+            var adapter = GetAdapter(dbConnectionFactoryInstance);
+            var adapterType = adapter.RolesTable(dbConnectionFactoryInstance).GetType();
+
+
+            services.AddScoped(typeof(IRolesTable<,,>).MakeGenericType(typeof(IdentityRole<string>), typeof(string), typeof(IdentityRoleClaim<string>)), adapterType);
+
+
             var keyType = identityUserType.GenericTypeArguments[0];
             services.TryAddScoped(typeof(IDbConnectionFactory), x =>
             {
-                var dbConnectionFactoryInstance = (IDbConnectionFactory)Activator.CreateInstance(dbConnectionContextOptions.DbConnectionFactory.GetType());
-                dbConnectionFactoryInstance.ConnectionString = dbConnectionContextOptions.ConnectionString;
+                //var dbConnectionFactoryInstance = (IDbConnectionFactory)Activator.CreateInstance(dbConnectionContextOptions.DbConnectionFactory.GetType());
+                //dbConnectionFactoryInstance.ConnectionString = dbConnectionContextOptions.ConnectionString;
                 return dbConnectionFactoryInstance;
             });
 
@@ -119,6 +133,18 @@ namespace Dapper.Identity
                 type = type.BaseType;
             }
             return null;
+        }
+
+        public delegate string GetDatabaseTypeDelegate(IDbConnectionFactory connection);
+        public static GetDatabaseTypeDelegate GetDatabaseType;
+        private static ISqlAdapter GetAdapter(IDbConnectionFactory connectionFactory)
+        {
+            var name = GetDatabaseType?.Invoke(connectionFactory)
+                       ?? connectionFactory.GetType().Name;
+
+            return AdapterDictionary.TryGetValue(name, out var adapter)
+                ? adapter
+                : DefaultAdapter;
         }
     }
 }
