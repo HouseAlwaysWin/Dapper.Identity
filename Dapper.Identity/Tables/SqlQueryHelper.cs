@@ -47,10 +47,9 @@ namespace Dapper.Identity.Tables
             return properties.ToList();
         }
 
-        public static (string TableName, string Sechma) GetTableNameAndSechma<T>()
+        public static (string TableName, string Sechma) GetTableNameAndSechma<T>(string tableName, string sechma = "dbo")
         {
             var tableNameAttr = typeof(T).GetCustomAttributes(typeof(TableNameAttribute), true).FirstOrDefault() as TableNameAttribute;
-            string tableName = "AspNetRoles", sechma = "dbo";
             if (tableNameAttr != null)
             {
                 tableName = string.IsNullOrWhiteSpace(tableNameAttr.TableName) ? tableName : tableNameAttr.TableName;

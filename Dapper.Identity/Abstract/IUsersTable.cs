@@ -14,12 +14,13 @@ namespace Dapper.Identity.Abstract
     /// <typeparam name="TUserClaim">The type representing a claim.</typeparam>
     /// <typeparam name="TUserLogin">The type representing a user external login.</typeparam>
     /// <typeparam name="TUserToken">The type representing a user token.</typeparam>
-    public interface IUsersOnlyTable<TUser, TKey, TUserClaim, TUserLogin, TUserToken>
+    public interface IUsersOnlyTable<TUser, TKey, TUserClaim, TUserLogin, TUserToken, TRole>
         where TUser : IdentityUser<TKey>
         where TKey : IEquatable<TKey>
         where TUserClaim : IdentityUserClaim<TKey>, new()
         where TUserLogin : IdentityUserLogin<TKey>, new()
         where TUserToken : IdentityUserToken<TKey>, new()
+        where TRole : IdentityRole<TKey>
     {
         /// <summary>
         /// Creates a new user in the store.
@@ -76,9 +77,10 @@ namespace Dapper.Identity.Abstract
     /// <typeparam name="TUserRole">The type representing a user role.</typeparam>
     /// <typeparam name="TUserLogin">The type representing a user external login.</typeparam>
     /// <typeparam name="TUserToken">The type representing a user token.</typeparam>
-    public interface IUsersTable<TUser, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken> : IUsersOnlyTable<TUser, TKey, TUserClaim, TUserLogin, TUserToken>
+    public interface IUsersTable<TUser, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken, TRole> : IUsersOnlyTable<TUser, TKey, TUserClaim, TUserLogin, TUserToken, TRole>
         where TUser : IdentityUser<TKey>
         where TKey : IEquatable<TKey>
+        where TRole : IdentityRole<TKey>
         where TUserClaim : IdentityUserClaim<TKey>, new()
         where TUserRole : IdentityUserRole<TKey>, new()
         where TUserLogin : IdentityUserLogin<TKey>, new()

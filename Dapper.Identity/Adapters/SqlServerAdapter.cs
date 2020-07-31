@@ -9,8 +9,8 @@ namespace Dapper.Identity.Adapters
 {
     public class SqlServerAdapter : ISqlAdapter
     {
-        public IRolesQuery RolesQuery => throw new NotImplementedException();
+        public IRolesQuery RolesQuery => new SqlQueries.SqlServerQuery.RolesQuery();
 
-        public IUsersQuery UsersQuery => throw new NotImplementedException();
+        public IUsersQuery UsersQuery => new SqlQueries.SqlServerQuery.UsersQuery();
     }
 }

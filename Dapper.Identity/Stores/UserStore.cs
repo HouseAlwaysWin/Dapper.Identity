@@ -42,7 +42,8 @@ namespace Dapper.Identity.Stores
         /// <param name="userTokensTable">Abstraction for interacting with AspNetUserTokens table.</param>
         /// <param name="rolesTable">Abstraction for interacting with AspNetRoles table.</param>
         /// <param name="describer">The <see cref="IdentityErrorDescriber"/>.</param>
-        public UserStore(IUsersTable<TUser, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken> usersTable, IUserClaimsTable<TKey, TUserClaim> userClaimsTable, IUserRolesTable<TRole, TKey, TUserRole> userRolesTable,
+        public UserStore(IUsersTable<TUser, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken, TRole> usersTable,
+            IUserClaimsTable<TKey, TUserClaim> userClaimsTable, IUserRolesTable<TRole, TKey, TUserRole> userRolesTable,
             IUserLoginsTable<TUser, TKey, TUserLogin> userLoginsTable, IUserTokensTable<TKey, TUserToken> userTokensTable, IRolesTable<TRole, TKey, TRoleClaim> rolesTable, IdentityErrorDescriber describer) : base(describer)
         {
             UsersTable = usersTable ??
@@ -82,7 +83,7 @@ namespace Dapper.Identity.Stores
         /// <summary>
         /// Abstraction for interacting with AspNetUsers table.
         /// </summary>
-        public IUsersTable<TUser, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken> UsersTable { get; }
+        public IUsersTable<TUser, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken, TRole> UsersTable { get; }
 
         /// <summary>
         /// Abstraction for interacting with AspNetUserClaims table.

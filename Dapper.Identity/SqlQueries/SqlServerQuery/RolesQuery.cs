@@ -7,12 +7,14 @@ using System.Text;
 
 namespace Dapper.Identity.SqlQueries.SqlServerQuery
 {
+
+
     public class RolesQuery : IRolesQuery
     {
-        public string CreateQuery<TRole>()
+        public string CreateSql<TRole>()
         {
             var roleType = typeof(TRole);
-            var tableInfo = SqlQueryHelper.GetTableNameAndSechma<TRole>();
+            var tableInfo = SqlQueryHelper.GetTableNameAndSechma<TRole>("AspNetRoles");
             List<string> colNames = SqlQueryHelper.GetColumnNames(roleType);
 
             StringBuilder sqlStringBuilder = new StringBuilder("INSERT INTO ");
@@ -24,18 +26,18 @@ namespace Dapper.Identity.SqlQueries.SqlServerQuery
             return sqlStringBuilder.ToString();
         }
 
-        public string DeleteQuery<TRole>()
+        public string DeleteSql<TRole>()
         {
-            var tableInfo = SqlQueryHelper.GetTableNameAndSechma<TRole>();
+            var tableInfo = SqlQueryHelper.GetTableNameAndSechma<TRole>("AspNetRoles");
             StringBuilder sqlStringBuilder = new StringBuilder("DELETE FROM ");
             sqlStringBuilder.AppendTableName(tableInfo.TableName, tableInfo.Sechma);
             sqlStringBuilder.Append(" WHERE [Id] = @Id");
             return sqlStringBuilder.ToString();
         }
 
-        public string FindByIdQuery<TRole>()
+        public string FindByIdSql<TRole>()
         {
-            var tableInfo = SqlQueryHelper.GetTableNameAndSechma<TRole>();
+            var tableInfo = SqlQueryHelper.GetTableNameAndSechma<TRole>("AspNetRoles");
 
             StringBuilder sqlStringBuilder = new StringBuilder("SELECT * FROM ");
             sqlStringBuilder.AppendTableName(tableInfo.TableName, tableInfo.Sechma);
@@ -44,9 +46,9 @@ namespace Dapper.Identity.SqlQueries.SqlServerQuery
 
         }
 
-        public string FindByNameQuery<TRole>()
+        public string FindByNameSql<TRole>()
         {
-            var tableInfo = SqlQueryHelper.GetTableNameAndSechma<TRole>();
+            var tableInfo = SqlQueryHelper.GetTableNameAndSechma<TRole>("AspNetRoles");
 
             StringBuilder sqlStringBuilder = new StringBuilder("SELECT * FROM ");
             sqlStringBuilder.AppendTableName(tableInfo.TableName, tableInfo.Sechma);
@@ -54,27 +56,27 @@ namespace Dapper.Identity.SqlQueries.SqlServerQuery
             return sqlStringBuilder.ToString();
         }
 
-        public string InsertClaimsQuery<TRoleClaim>()
+        public string InsertClaimsSql<TRoleClaim>()
         {
-            var tableInfo = SqlQueryHelper.GetTableNameAndSechma<TRoleClaim>();
+            var tableInfo = SqlQueryHelper.GetTableNameAndSechma<TRoleClaim>("AspNetRoleClaims");
             StringBuilder sqlStringBuilder = new StringBuilder("INSERT INTO ");
             sqlStringBuilder.AppendTableName(tableInfo.TableName, tableInfo.Sechma);
             sqlStringBuilder.Append("(RoleId, ClaimType, ClaimValue) VALUES (@RoleId, @ClaimType, @ClaimValue);");
             return sqlStringBuilder.ToString();
         }
 
-        public string DeleteClaimsQuery<TRoleClaim>()
+        public string DeleteClaimsSql<TRoleClaim>()
         {
-            var tableInfo = SqlQueryHelper.GetTableNameAndSechma<TRoleClaim>();
+            var tableInfo = SqlQueryHelper.GetTableNameAndSechma<TRoleClaim>("AspNetRoleClaims");
             StringBuilder sqlStringBuilder = new StringBuilder("DELETE FROM ");
             sqlStringBuilder.AppendTableName(tableInfo.TableName, tableInfo.Sechma);
             sqlStringBuilder.Append(" WHERE [RoleId] = @RoleId;");
             return sqlStringBuilder.ToString();
         }
 
-        public string UpdateRoleQuery<TRole>()
+        public string UpdateRoleSql<TRole>()
         {
-            var tableInfo = SqlQueryHelper.GetTableNameAndSechma<TRole>();
+            var tableInfo = SqlQueryHelper.GetTableNameAndSechma<TRole>("AspNetRoles");
             StringBuilder sqlStringBuilder = new StringBuilder("UPDATE ");
             sqlStringBuilder.AppendTableName(tableInfo.TableName, tableInfo.Sechma);
             sqlStringBuilder.Append("SET [Name] = @Name, [NormalizedName] = @NormalizedName, [ConcurrencyStamp] = @ConcurrencyStamp WHERE [Id] = @Id;");

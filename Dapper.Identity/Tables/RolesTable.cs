@@ -36,7 +36,7 @@ namespace Dapper.Identity.Tables
         public virtual async Task<bool> CreateAsync(TRole role)
         {
 
-            string sql = sqlAdapter.RolesQuery.CreateQuery<TRole>();
+            string sql = sqlAdapter.RolesQuery.CreateSql<TRole>();
 
             //const string sql = "INSERT INTO [dbo].[AspNetRoles] " +
             //                   "VALUES (@Id, @Name, @NormalizedName, @ConcurrencyStamp);";
@@ -54,7 +54,7 @@ namespace Dapper.Identity.Tables
         public virtual async Task<bool> DeleteAsync(TKey roleId)
         {
 
-            string sql = sqlAdapter.RolesQuery.DeleteQuery<TRole>();
+            string sql = sqlAdapter.RolesQuery.DeleteSql<TRole>();
             //const string sql = "DELETE " +
             //                   "FROM [dbo].[AspNetRoles] " +
             //                   "WHERE [Id] = @Id;";
@@ -66,7 +66,7 @@ namespace Dapper.Identity.Tables
         public virtual async Task<TRole> FindByIdAsync(TKey roleId)
         {
 
-            string sql = sqlAdapter.RolesQuery.FindByIdQuery<TRole>();
+            string sql = sqlAdapter.RolesQuery.FindByIdSql<TRole>();
             //const string sql = "SELECT * " +
             //                   "FROM [dbo].[AspNetRoles] " +
             //                   "WHERE [Id] = @Id;";
@@ -77,7 +77,7 @@ namespace Dapper.Identity.Tables
         /// <inheritdoc/>
         public virtual async Task<TRole> FindByNameAsync(string normalizedName)
         {
-            string sql = sqlAdapter.RolesQuery.FindByNameQuery<TRole>();
+            string sql = sqlAdapter.RolesQuery.FindByNameSql<TRole>();
             //const string sql = "SELECT * " +
             //                   "FROM [dbo].[AspNetRoles] " +
             //                   "WHERE [NormalizedName] = @NormalizedName;";
@@ -91,7 +91,7 @@ namespace Dapper.Identity.Tables
             //const string updateRoleSql = "UPDATE [dbo].[AspNetRoles] " +
             //                             "SET [Name] = @Name, [NormalizedName] = @NormalizedName, [ConcurrencyStamp] = @ConcurrencyStamp " +
             //                             "WHERE [Id] = @Id;";
-            string updateRoleSql = sqlAdapter.RolesQuery.UpdateRoleQuery<TRole>();
+            string updateRoleSql = sqlAdapter.RolesQuery.UpdateRoleSql<TRole>();
             using (var transaction = DbConnection.BeginTransaction())
             {
                 await DbConnection.ExecuteAsync(updateRoleSql, new
@@ -106,7 +106,7 @@ namespace Dapper.Identity.Tables
                     //const string deleteClaimsSql = "DELETE " +
                     //                               "FROM [dbo].[AspNetRoleClaims] " +
                     //                               "WHERE [RoleId] = @RoleId;";
-                    string deleteClaimsSql = sqlAdapter.RolesQuery.DeleteClaimsQuery<TRoleClaim>();
+                    string deleteClaimsSql = sqlAdapter.RolesQuery.DeleteClaimsSql<TRoleClaim>();
 
                     await DbConnection.ExecuteAsync(deleteClaimsSql, new
                     {
@@ -115,7 +115,7 @@ namespace Dapper.Identity.Tables
                     //const string insertClaimsSql = "INSERT INTO [dbo].[AspNetRoleClaims] (RoleId, ClaimType, ClaimValue) " +
                     //                               "VALUES (@RoleId, @ClaimType, @ClaimValue);";
 
-                    string insertClaimsSql = sqlAdapter.RolesQuery.InsertClaimsQuery<TRoleClaim>();
+                    string insertClaimsSql = sqlAdapter.RolesQuery.InsertClaimsSql<TRoleClaim>();
                     await DbConnection.ExecuteAsync(insertClaimsSql, claims.Select(x => new
                     {
                         RoleId = role.Id,

@@ -164,7 +164,7 @@ namespace Dapper.Identity
         /// <typeparam name="TUser">The type representing a user.</typeparam>
         /// <param name="options">Options for configuring Dapper stores.</param>
         public static void AddUsersTable<TUsersTable, TUser>(this DapperStoreOptions options)
-            where TUsersTable : UsersTable<TUser, string, IdentityUserClaim<string>, IdentityUserRole<string>, IdentityUserLogin<string>, IdentityUserToken<string>>
+            where TUsersTable : UsersTable<TUser, string, IdentityUserClaim<string>, IdentityUserRole<string>, IdentityUserLogin<string>, IdentityUserToken<string>, IdentityRole<string>>
             where TUser : IdentityUser<string>
         {
             options.AddUsersTable<TUsersTable, TUser, string>();
@@ -178,11 +178,11 @@ namespace Dapper.Identity
         /// <typeparam name="TKey">The type of the primary key for a role and user.</typeparam>
         /// <param name="options">Options for configuring Dapper stores.</param>
         public static void AddUsersTable<TUsersTable, TUser, TKey>(this DapperStoreOptions options)
-            where TUsersTable : UsersTable<TUser, TKey, IdentityUserClaim<TKey>, IdentityUserRole<TKey>, IdentityUserLogin<TKey>, IdentityUserToken<TKey>>
+            where TUsersTable : UsersTable<TUser, TKey, IdentityUserClaim<TKey>, IdentityUserRole<TKey>, IdentityUserLogin<TKey>, IdentityUserToken<TKey>, IdentityRole<TKey>>
             where TUser : IdentityUser<TKey>
             where TKey : IEquatable<TKey>
         {
-            options.AddUsersTable<TUsersTable, TUser, TKey, IdentityUserClaim<TKey>, IdentityUserRole<TKey>, IdentityUserLogin<TKey>, IdentityUserToken<TKey>>();
+            options.AddUsersTable<TUsersTable, TUser, TKey, IdentityUserClaim<TKey>, IdentityUserRole<TKey>, IdentityUserLogin<TKey>, IdentityUserToken<TKey>, IdentityRole<TKey>>();
         }
 
         /// <summary>
@@ -196,16 +196,19 @@ namespace Dapper.Identity
         /// <typeparam name="TUserLogin">The type representing a user external login.</typeparam>
         /// <typeparam name="TUserToken">The type representing a user token.</typeparam>
         /// <param name="options">Options for configuring Dapper stores.</param>
-        public static void AddUsersTable<TUsersTable, TUser, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken>(this DapperStoreOptions options)
-            where TUsersTable : UsersTable<TUser, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken>
+        public static void AddUsersTable<TUsersTable, TUser, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken, TRole>(this DapperStoreOptions options)
+            where TUsersTable : UsersTable<TUser, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken, TRole>
             where TUser : IdentityUser<TKey>
             where TKey : IEquatable<TKey>
             where TUserClaim : IdentityUserClaim<TKey>, new()
             where TUserRole : IdentityUserRole<TKey>, new()
             where TUserLogin : IdentityUserLogin<TKey>, new()
             where TUserToken : IdentityUserToken<TKey>, new()
+            where TRole : IdentityRole<TKey>, new()
         {
-            options.Services.AddScoped(typeof(IUsersTable<,,,,,>).MakeGenericType(typeof(TUser), typeof(TKey), typeof(TUserClaim), typeof(TUserRole), typeof(TUserLogin), typeof(TUserToken)), typeof(TUsersTable));
+            options.Services.AddScoped(
+                typeof(IUsersTable<,,,,,,>).MakeGenericType(typeof(TUser), typeof(TKey), typeof(TUserClaim), typeof(TUserRole), typeof(TUserLogin), typeof(TUserToken), typeof(TRole)),
+                typeof(TUsersTable));
         }
 
         /// <summary>

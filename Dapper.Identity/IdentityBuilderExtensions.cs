@@ -75,8 +75,8 @@ namespace Dapper.Identity
                     throw new InvalidOperationException($"Method {nameof(AddDapperStores)} can only be called with a role that derives from IdentityRole<TKey>.");
                 }
                 services.TryAddScoped(
-                    typeof(IUsersTable<,,,,,>).MakeGenericType(userType, keyType, userClaimType, userRoleType, userLoginType, userTokenType),
-                    typeof(UsersTable<,,,,,>).MakeGenericType(userType, keyType, userClaimType, userRoleType, userLoginType, userTokenType)
+                    typeof(IUsersTable<,,,,,,>).MakeGenericType(userType, keyType, userClaimType, userRoleType, userLoginType, userTokenType, roleType),
+                    typeof(UsersTable<,,,,,,>).MakeGenericType(userType, keyType, userClaimType, userRoleType, userLoginType, userTokenType, roleType)
                 );
                 services.TryAddScoped(typeof(IRolesTable<,,>).MakeGenericType(roleType, keyType, roleClaimType), typeof(RolesTable<,,>).MakeGenericType(roleType, keyType, roleClaimType));
                 services.TryAddScoped(typeof(IUserRolesTable<,,>).MakeGenericType(roleType, keyType, userRoleType), typeof(UserRolesTable<,,>).MakeGenericType(roleType, keyType, userRoleType));
@@ -87,10 +87,10 @@ namespace Dapper.Identity
             else
             {
                 services.TryAddScoped(
-                    typeof(IUsersOnlyTable<,,,,>).MakeGenericType(userType, keyType, userClaimType, userLoginType, userTokenType),
-                    typeof(UsersTable<,,,,,>).MakeGenericType(userType, keyType, userClaimType, roleType, userLoginType, userTokenType)
+                    typeof(IUsersOnlyTable<,,,,,>).MakeGenericType(userType, keyType, userClaimType, userLoginType, userTokenType, roleType),
+                    typeof(UsersTable<,,,,,,>).MakeGenericType(userType, keyType, userClaimType, roleType, userLoginType, userTokenType, roleType)
                 );
-                userStoreType = typeof(UserOnlyStore<,,,,>).MakeGenericType(userType, keyType, userClaimType, userLoginType, userTokenType);
+                userStoreType = typeof(UserOnlyStore<,,,,,>).MakeGenericType(userType, keyType, userClaimType, userLoginType, userTokenType);
             }
             services.TryAddScoped(typeof(IUserClaimsTable<,>).MakeGenericType(keyType, userClaimType), typeof(UserClaimsTable<,>).MakeGenericType(keyType, userClaimType));
             services.TryAddScoped(typeof(IUserLoginsTable<,,>).MakeGenericType(userType, keyType, userLoginType), typeof(UserLoginsTable<,,>).MakeGenericType(userType, keyType, userLoginType));

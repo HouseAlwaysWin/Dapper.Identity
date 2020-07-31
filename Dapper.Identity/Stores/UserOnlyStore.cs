@@ -17,7 +17,7 @@ namespace Dapper.Identity.Stores
     /// <typeparam name="TUserClaim">The type representing a claim.</typeparam>
     /// <typeparam name="TUserLogin">The type representing a user external login.</typeparam>
     /// <typeparam name="TUserToken">The type representing a user token.</typeparam>
-    public class UserOnlyStore<TUser, TKey, TUserClaim, TUserLogin, TUserToken> :
+    public class UserOnlyStore<TUser, TKey, TUserClaim, TUserLogin, TUserToken, TRole> :
         UserStoreBase<TUser, TKey, TUserClaim, TUserLogin, TUserToken>,
         IProtectedUserStore<TUser>
         where TUser : IdentityUser<TKey>
@@ -25,6 +25,7 @@ namespace Dapper.Identity.Stores
         where TUserClaim : IdentityUserClaim<TKey>, new()
     where TUserLogin : IdentityUserLogin<TKey>, new()
     where TUserToken : IdentityUserToken<TKey>, new()
+    where TRole : IdentityRole<TKey>
     {
         /// <summary>
         /// Constructs a new instance of <see cref="UserOnlyStore{TUser, TKey, TUserClaim, TUserLogin, TUserToken}"/>.
@@ -34,7 +35,7 @@ namespace Dapper.Identity.Stores
         /// <param name="userLoginsTable">Abstraction for interacting with AspNetUserLogins table.</param>
         /// <param name="userTokensTable">Abstraction for interacting with AspNetUserTokens table.</param>
         /// <param name="describer">The <see cref="IdentityErrorDescriber"/>.</param>
-        public UserOnlyStore(IUsersOnlyTable<TUser, TKey, TUserClaim, TUserLogin, TUserToken> usersTable, IUserClaimsTable<TKey, TUserClaim> userClaimsTable, IUserLoginsTable<TUser, TKey, TUserLogin> userLoginsTable,
+        public UserOnlyStore(IUsersOnlyTable<TUser, TKey, TUserClaim, TUserLogin, TUserToken, TRole> usersTable, IUserClaimsTable<TKey, TUserClaim> userClaimsTable, IUserLoginsTable<TUser, TKey, TUserLogin> userLoginsTable,
             IUserTokensTable<TKey, TUserToken> userTokensTable, IdentityErrorDescriber describer) : base(describer)
         {
             UsersTable = usersTable ??
@@ -65,7 +66,7 @@ namespace Dapper.Identity.Stores
         /// <summary>
         /// Abstraction for interacting with AspNetUsers table.
         /// </summary>
-        public IUsersOnlyTable<TUser, TKey, TUserClaim, TUserLogin, TUserToken> UsersTable { get; }
+        public IUsersOnlyTable<TUser, TKey, TUserClaim, TUserLogin, TUserToken, TRole> UsersTable { get; }
 
         /// <summary>
         /// Abstraction for interacting with AspNetUserClaims table.
