@@ -1,8 +1,11 @@
-﻿using Dapper.Identity.SqlQueries.Abstract;
+﻿using Dapper.Identity.Attributes;
+using Dapper.Identity.SqlQueries.Abstract;
 using Dapper.Identity.Tables;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace Dapper.Identity.SqlQueries.PostgreSqlQuery
@@ -14,13 +17,16 @@ namespace Dapper.Identity.SqlQueries.PostgreSqlQuery
             where TKey : IEquatable<TKey>
         {
             var roleType = typeof(TRole);
-            var allProperties = SqlQueryHelper.TypePropertiesCache(roleType);
+            var tableInfo = SqlQueryHelper.GetTableNameAndSechma<TRole>();
+            List<string> colNames = SqlQueryHelper.GetColumnNames(roleType);
 
             StringBuilder sqlStringBuilder = new StringBuilder("INSERT INTO ");
+            SqlQueryHelper.AppendTableName(ref sqlStringBuilder, tableInfo.TableName, tableInfo.Sechma);
+            sqlStringBuilder.Append(" VALUES (");
+            SqlQueryHelper.AppendColumnNamesParams(ref sqlStringBuilder, colNames);
+            sqlStringBuilder.Append(");");
 
-            const string sql = "INSERT INTO [dbo].[AspNetRoles] " +
-                            "VALUES (@Id, @Name, @NormalizedName, @ConcurrencyStamp);";
-            return sql;
+            return sqlStringBuilder.ToString();
         }
 
         public string CreateQuery<TRole>(TRole role)
