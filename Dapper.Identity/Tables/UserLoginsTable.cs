@@ -1,4 +1,5 @@
 ﻿using Dapper.Identity.Abstract;
+using Dapper.Identity.Adapters;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -19,11 +20,16 @@ namespace Dapper.Identity.Tables
         where TKey : IEquatable<TKey>
         where TUserLogin : IdentityUserLogin<TKey>, new()
     {
+        private ISqlAdapter sqlAdapter;
+
         /// <summary>
         /// Creates a new instance of <see cref="UserLoginsTable{TUser, TKey, TUserLogin}"/>.
         /// </summary>
         /// <param name="dbConnectionFactory">A factory for creating instances of <see cref="IDbConnection"/>.</param>
-        public UserLoginsTable(IDbConnectionFactory dbConnectionFactory) : base(dbConnectionFactory) { }
+        public UserLoginsTable(IDbConnectionFactory dbConnectionFactory) : base(dbConnectionFactory)
+        {
+            sqlAdapter = SqlQueryHelper.GetAdapter(dbConnectionFactory);
+        }
 
         /// <inheritdoc/>
         public virtual async Task<IEnumerable<TUserLogin>> GetLoginsAsync(TKey userId)

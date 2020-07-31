@@ -1,4 +1,5 @@
 using Dapper.Identity.Abstract;
+using Dapper.Identity.Adapters;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -17,11 +18,16 @@ namespace Dapper.Identity.Tables
         where TKey : IEquatable<TKey>
         where TRoleClaim : IdentityRoleClaim<TKey>, new()
     {
+        private ISqlAdapter sqlAdapter;
+
         /// <summary>
         /// Creates a new instance of <see cref="RoleClaimsTable{TKey, TRoleClaim}"/>.
         /// </summary>
         /// <param name="dbConnectionFactory">A factory for creating instances of <see cref="IDbConnection"/>.</param>
-        public RoleClaimsTable(IDbConnectionFactory dbConnectionFactory) : base(dbConnectionFactory) { }
+        public RoleClaimsTable(IDbConnectionFactory dbConnectionFactory) : base(dbConnectionFactory)
+        {
+            sqlAdapter = SqlQueryHelper.GetAdapter(dbConnectionFactory);
+        }
 
         /// <inheritdoc/>
         public virtual async Task<IEnumerable<TRoleClaim>> GetClaimsAsync(TKey roleId)

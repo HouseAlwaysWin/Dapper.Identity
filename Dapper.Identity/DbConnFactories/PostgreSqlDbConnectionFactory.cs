@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Text;
 
-namespace Dapper.Identity
+namespace Dapper.Identity.DbConnFactories
 {
     public class PostgreSqlDbConnectionFactory : IDbConnectionFactory
     {

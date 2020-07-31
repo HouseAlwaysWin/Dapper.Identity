@@ -29,7 +29,7 @@ namespace Dapper.Identity.Tables
         /// <param name="dbConnectionFactory">A factory for creating instances of <see cref="IDbConnection"/>.</param>
         public RolesTable(IDbConnectionFactory dbConnectionFactory) : base(dbConnectionFactory)
         {
-            sqlAdapter = DbAdapterHelper.GetAdapter(dbConnectionFactory);
+            sqlAdapter = SqlQueryHelper.GetAdapter(dbConnectionFactory);
         }
 
         /// <inheritdoc/>

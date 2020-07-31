@@ -1,4 +1,5 @@
 ﻿using Dapper.Identity.SqlQueries.Abstract;
+using Dapper.Identity.Tables;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,11 @@ namespace Dapper.Identity.SqlQueries.PostgreSqlQuery
             where TRole : IdentityRole<TKey>
             where TKey : IEquatable<TKey>
         {
+            var roleType = typeof(TRole);
+            var allProperties = SqlQueryHelper.TypePropertiesCache(roleType);
+
+            StringBuilder sqlStringBuilder = new StringBuilder("INSERT INTO ");
+
             const string sql = "INSERT INTO [dbo].[AspNetRoles] " +
                             "VALUES (@Id, @Name, @NormalizedName, @ConcurrencyStamp);";
             return sql;

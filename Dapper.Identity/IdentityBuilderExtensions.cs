@@ -1,5 +1,6 @@
 ﻿using Dapper.Identity.Abstract;
 using Dapper.Identity.Adapters;
+using Dapper.Identity.DbConnFactories;
 using Dapper.Identity.Stores;
 using Dapper.Identity.Tables;
 using Microsoft.AspNetCore.Identity;

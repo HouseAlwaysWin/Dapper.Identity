@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
 
-namespace Dapper.Identity
+namespace Dapper.Identity.DbConnFactories
 {
     /// <summary>
     /// Creates a new <see cref="SqlConnection"/> instance for connecting to Microsoft SQL Server.
