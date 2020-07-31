@@ -54,7 +54,7 @@ namespace Dapper.Identity.Tables
         public virtual async Task<bool> DeleteAsync(TKey roleId)
         {
 
-            string sql = sqlAdapter.RolesQuery.DeleteQuery<TRole, TKey>();
+            string sql = sqlAdapter.RolesQuery.DeleteQuery<TRole>();
             //const string sql = "DELETE " +
             //                   "FROM [dbo].[AspNetRoles] " +
             //                   "WHERE [Id] = @Id;";
@@ -77,7 +77,7 @@ namespace Dapper.Identity.Tables
         /// <inheritdoc/>
         public virtual async Task<TRole> FindByNameAsync(string normalizedName)
         {
-            string sql = sqlAdapter.RolesQuery.FindByNameQuery<TRole>(normalizedName);
+            string sql = sqlAdapter.RolesQuery.FindByNameQuery<TRole>();
             //const string sql = "SELECT * " +
             //                   "FROM [dbo].[AspNetRoles] " +
             //                   "WHERE [NormalizedName] = @NormalizedName;";
@@ -91,7 +91,7 @@ namespace Dapper.Identity.Tables
             //const string updateRoleSql = "UPDATE [dbo].[AspNetRoles] " +
             //                             "SET [Name] = @Name, [NormalizedName] = @NormalizedName, [ConcurrencyStamp] = @ConcurrencyStamp " +
             //                             "WHERE [Id] = @Id;";
-            string updateRoleSql = sqlAdapter.RolesQuery.UpdateRoleQuery(role, claims);
+            string updateRoleSql = sqlAdapter.RolesQuery.UpdateRoleQuery<TRole>();
             using (var transaction = DbConnection.BeginTransaction())
             {
                 await DbConnection.ExecuteAsync(updateRoleSql, new
@@ -103,15 +103,19 @@ namespace Dapper.Identity.Tables
                 }, transaction);
                 if (claims?.Count() > 0)
                 {
-                    const string deleteClaimsSql = "DELETE " +
-                                                   "FROM [dbo].[AspNetRoleClaims] " +
-                                                   "WHERE [RoleId] = @RoleId;";
+                    //const string deleteClaimsSql = "DELETE " +
+                    //                               "FROM [dbo].[AspNetRoleClaims] " +
+                    //                               "WHERE [RoleId] = @RoleId;";
+                    string deleteClaimsSql = sqlAdapter.RolesQuery.DeleteClaimsQuery<TRoleClaim>();
+
                     await DbConnection.ExecuteAsync(deleteClaimsSql, new
                     {
                         RoleId = role.Id
                     }, transaction);
-                    const string insertClaimsSql = "INSERT INTO [dbo].[AspNetRoleClaims] (RoleId, ClaimType, ClaimValue) " +
-                                                   "VALUES (@RoleId, @ClaimType, @ClaimValue);";
+                    //const string insertClaimsSql = "INSERT INTO [dbo].[AspNetRoleClaims] (RoleId, ClaimType, ClaimValue) " +
+                    //                               "VALUES (@RoleId, @ClaimType, @ClaimValue);";
+
+                    string insertClaimsSql = sqlAdapter.RolesQuery.InsertClaimsQuery<TRoleClaim>();
                     await DbConnection.ExecuteAsync(insertClaimsSql, claims.Select(x => new
                     {
                         RoleId = role.Id,

@@ -8,5 +8,7 @@ namespace Dapper.Identity.Adapters
     public class MySqlAdapter : ISqlAdapter
     {
         public IRolesQuery RolesQuery => throw new NotImplementedException();
+
+        public IUsersQuery UsersQuery => throw new NotImplementedException();
     }
 }

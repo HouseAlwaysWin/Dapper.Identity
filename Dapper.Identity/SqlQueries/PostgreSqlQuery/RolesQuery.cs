@@ -17,22 +17,22 @@ namespace Dapper.Identity.SqlQueries.PostgreSqlQuery
             throw new NotImplementedException();
         }
 
-        public string DeleteClaimsQuery<TRole, TRoleClaim>()
+        public string DeleteClaimsQuery<TRoleClaim>()
         {
             throw new NotImplementedException();
         }
 
-        public string DeleteQuery<TRole, TKey>()
+        public string DeleteQuery<TRole>()
         {
             throw new NotImplementedException();
         }
 
-        public string FindByIdQuery<TRole, TKey>()
+        public string FindByIdQuery<TRole>()
         {
             throw new NotImplementedException();
         }
 
-        public string FindByNameQuery<TRole, TKey>()
+        public string FindByNameQuery<TRole>()
         {
             throw new NotImplementedException();
         }
@@ -42,7 +42,7 @@ namespace Dapper.Identity.SqlQueries.PostgreSqlQuery
             throw new NotImplementedException();
         }
 
-        public string UpdateRoleQuery<TRole, TRoleClaim>()
+        public string UpdateRoleQuery<TRole>()
         {
             throw new NotImplementedException();
         }

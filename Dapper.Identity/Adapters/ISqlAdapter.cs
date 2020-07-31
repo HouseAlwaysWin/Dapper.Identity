@@ -12,5 +12,6 @@ namespace Dapper.Identity.Adapters
     public interface ISqlAdapter
     {
         IRolesQuery RolesQuery { get; }
+        IUsersQuery UsersQuery { get; }
     }
 }
