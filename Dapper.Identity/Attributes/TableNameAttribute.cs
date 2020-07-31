@@ -5,11 +5,11 @@ using System.Text;
 namespace Dapper.Identity.Attributes
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public class TableAttribute : Attribute
+    public class TableNameAttribute : Attribute
     {
-        private string TableName { get; set; }
-        private string Schema { get; set; }
-        public TableAttribute(string tableName, string schema)
+        public string TableName { get; set; }
+        public string Schema { get; set; }
+        public TableNameAttribute(string tableName, string schema)
         {
             this.TableName = tableName;
             this.Schema = schema;
