@@ -1,4 +1,5 @@
 ﻿using Dapper.Identity.Abstract;
+using Dapper.Identity.Adapters;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -20,17 +21,25 @@ namespace Dapper.Identity.Tables
         where TKey : IEquatable<TKey>
         where TRoleClaim : IdentityRoleClaim<TKey>, new()
     {
+
+        private ISqlAdapter sqlAdapter;
         /// <summary>
         /// Creates a new instance of <see cref="RolesTable{TRole, TKey, TRoleClaim}"/>.
         /// </summary>
         /// <param name="dbConnectionFactory">A factory for creating instances of <see cref="IDbConnection"/>.</param>
-        public RolesTable(IDbConnectionFactory dbConnectionFactory) : base(dbConnectionFactory) { }
+        public RolesTable(IDbConnectionFactory dbConnectionFactory) : base(dbConnectionFactory)
+        {
+            sqlAdapter = DbAdapterHelper.GetAdapter(dbConnectionFactory);
+        }
 
         /// <inheritdoc/>
         public virtual async Task<bool> CreateAsync(TRole role)
         {
-            const string sql = "INSERT INTO [dbo].[AspNetRoles] " +
-                               "VALUES (@Id, @Name, @NormalizedName, @ConcurrencyStamp);";
+
+            string sql = sqlAdapter.RolesQuery.CreateQuery(role);
+
+            //const string sql = "INSERT INTO [dbo].[AspNetRoles] " +
+            //                   "VALUES (@Id, @Name, @NormalizedName, @ConcurrencyStamp);";
             var rowsInserted = await DbConnection.ExecuteAsync(sql, new
             {
                 role.Id,
@@ -44,9 +53,11 @@ namespace Dapper.Identity.Tables
         /// <inheritdoc/>
         public virtual async Task<bool> DeleteAsync(TKey roleId)
         {
-            const string sql = "DELETE " +
-                               "FROM [dbo].[AspNetRoles] " +
-                               "WHERE [Id] = @Id;";
+
+            string sql = sqlAdapter.RolesQuery.DeleteQuery(roleId);
+            //const string sql = "DELETE " +
+            //                   "FROM [dbo].[AspNetRoles] " +
+            //                   "WHERE [Id] = @Id;";
             var rowsDeleted = await DbConnection.ExecuteAsync(sql, new { Id = roleId });
             return rowsDeleted == 1;
         }
@@ -54,9 +65,11 @@ namespace Dapper.Identity.Tables
         /// <inheritdoc/>
         public virtual async Task<TRole> FindByIdAsync(TKey roleId)
         {
-            const string sql = "SELECT * " +
-                               "FROM [dbo].[AspNetRoles] " +
-                               "WHERE [Id] = @Id;";
+
+            string sql = sqlAdapter.RolesQuery.FindByIdQuery(roleId);
+            //const string sql = "SELECT * " +
+            //                   "FROM [dbo].[AspNetRoles] " +
+            //                   "WHERE [Id] = @Id;";
             var role = await DbConnection.QuerySingleOrDefaultAsync<TRole>(sql, new { Id = roleId });
             return role;
         }
@@ -64,9 +77,10 @@ namespace Dapper.Identity.Tables
         /// <inheritdoc/>
         public virtual async Task<TRole> FindByNameAsync(string normalizedName)
         {
-            const string sql = "SELECT * " +
-                               "FROM [dbo].[AspNetRoles] " +
-                               "WHERE [NormalizedName] = @NormalizedName;";
+            string sql = sqlAdapter.RolesQuery.FindByNameQuery<TRole>(normalizedName);
+            //const string sql = "SELECT * " +
+            //                   "FROM [dbo].[AspNetRoles] " +
+            //                   "WHERE [NormalizedName] = @NormalizedName;";
             var role = await DbConnection.QuerySingleOrDefaultAsync<TRole>(sql, new { NormalizedName = normalizedName });
             return role;
         }
@@ -74,9 +88,10 @@ namespace Dapper.Identity.Tables
         /// <inheritdoc/>
         public virtual async Task<bool> UpdateAsync(TRole role, IList<TRoleClaim> claims = null)
         {
-            const string updateRoleSql = "UPDATE [dbo].[AspNetRoles] " +
-                                         "SET [Name] = @Name, [NormalizedName] = @NormalizedName, [ConcurrencyStamp] = @ConcurrencyStamp " +
-                                         "WHERE [Id] = @Id;";
+            //const string updateRoleSql = "UPDATE [dbo].[AspNetRoles] " +
+            //                             "SET [Name] = @Name, [NormalizedName] = @NormalizedName, [ConcurrencyStamp] = @ConcurrencyStamp " +
+            //                             "WHERE [Id] = @Id;";
+            string updateRoleSql = sqlAdapter.RolesQuery.UpdateRoleQuery(role, claims);
             using (var transaction = DbConnection.BeginTransaction())
             {
                 await DbConnection.ExecuteAsync(updateRoleSql, new

@@ -19,17 +19,6 @@ namespace Dapper.Identity
     public static class IdentityBuilderExtensions
     {
 
-        private static readonly ISqlAdapter DefaultAdapter = new SqlServerAdapter();
-        private static readonly Dictionary<string, ISqlAdapter> AdapterDictionary
-            = new Dictionary<string, ISqlAdapter>
-            {
-                ["SqlServerDbConnectionFactory"] = new SqlServerAdapter(),
-                //["sqlceconnection"] = new SqlCeServerAdapter(),
-                ["PostgreSqlDbConnectionFactory"] = new PostgresAdapter(),
-                //["sqliteconnection"] = new SQLiteAdapter(),
-                //["mysqlconnection"] = new MySqlAdapter(),
-                //["fbconnection"] = new FbAdapter()
-            };
         /// <summary>
         /// Adds a Dapper implementation of ASP.NET Core Identity stores.
         /// </summary>
@@ -59,25 +48,14 @@ namespace Dapper.Identity
                 Services = services
             };
 
-
             configureAction?.Invoke(dbConnectionContextOptions);
             dbConnectionContextOptions.Services = null;
-
-            var dbConnectionFactoryInstance = (IDbConnectionFactory)Activator.CreateInstance(dbConnectionContextOptions.DbConnectionFactory.GetType());
-            dbConnectionFactoryInstance.ConnectionString = dbConnectionContextOptions.ConnectionString;
-
-            var adapter = GetAdapter(dbConnectionFactoryInstance);
-            var adapterType = adapter.RolesTable(dbConnectionFactoryInstance).GetType();
-
-
-            services.AddScoped(typeof(IRolesTable<,,>).MakeGenericType(typeof(IdentityRole<string>), typeof(string), typeof(IdentityRoleClaim<string>)), adapterType);
-
 
             var keyType = identityUserType.GenericTypeArguments[0];
             services.TryAddScoped(typeof(IDbConnectionFactory), x =>
             {
-                //var dbConnectionFactoryInstance = (IDbConnectionFactory)Activator.CreateInstance(dbConnectionContextOptions.DbConnectionFactory.GetType());
-                //dbConnectionFactoryInstance.ConnectionString = dbConnectionContextOptions.ConnectionString;
+                var dbConnectionFactoryInstance = (IDbConnectionFactory)Activator.CreateInstance(dbConnectionContextOptions.DbConnectionFactory.GetType());
+                dbConnectionFactoryInstance.ConnectionString = dbConnectionContextOptions.ConnectionString;
                 return dbConnectionFactoryInstance;
             });
 
@@ -135,16 +113,5 @@ namespace Dapper.Identity
             return null;
         }
 
-        public delegate string GetDatabaseTypeDelegate(IDbConnectionFactory connection);
-        public static GetDatabaseTypeDelegate GetDatabaseType;
-        private static ISqlAdapter GetAdapter(IDbConnectionFactory connectionFactory)
-        {
-            var name = GetDatabaseType?.Invoke(connectionFactory)
-                       ?? connectionFactory.GetType().Name;
-
-            return AdapterDictionary.TryGetValue(name, out var adapter)
-                ? adapter
-                : DefaultAdapter;
-        }
     }
 }

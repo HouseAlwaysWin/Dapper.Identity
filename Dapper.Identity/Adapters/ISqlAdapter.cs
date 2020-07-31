@@ -1,4 +1,6 @@
 ﻿using Dapper.Identity.Abstract;
+using Dapper.Identity.SqlQueries;
+using Dapper.Identity.SqlQueries.Abstract;
 using Dapper.Identity.Tables;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -9,6 +11,6 @@ namespace Dapper.Identity.Adapters
 {
     public interface ISqlAdapter
     {
-        RolesTable<IdentityRole<string>, string, IdentityRoleClaim<string>> RolesTable(IDbConnectionFactory dbConnectionFactory);
+        IRolesQuery RolesQuery { get; }
     }
 }

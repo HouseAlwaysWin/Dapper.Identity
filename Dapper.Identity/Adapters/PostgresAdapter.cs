@@ -1,5 +1,6 @@
-﻿using Dapper.Identity.Tables;
-using Dapper.Identity.Tables.PostgreSqlTables;
+﻿using Dapper.Identity.SqlQueries;
+using Dapper.Identity.SqlQueries.Abstract;
+using Dapper.Identity.Tables;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -9,9 +10,6 @@ namespace Dapper.Identity.Adapters
 {
     public class PostgresAdapter : ISqlAdapter
     {
-        public RolesTable<IdentityRole<string>, string, IdentityRoleClaim<string>> RolesTable(IDbConnectionFactory dbConnectionFactory)
-        {
-            return new PostgreSqlRolesTable(dbConnectionFactory);
-        }
+        public IRolesQuery RolesQuery => throw new NotImplementedException();
     }
 }
