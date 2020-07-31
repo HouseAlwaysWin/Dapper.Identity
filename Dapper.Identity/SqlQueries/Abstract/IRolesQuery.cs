@@ -7,17 +7,17 @@ namespace Dapper.Identity.SqlQueries.Abstract
 {
     public interface IRolesQuery
     {
-        string CreateQuery<TRole>(TRole role);
+        string CreateQuery<TRole>();
 
-        string DeleteQuery<TKey>(TKey roleId);
+        string DeleteQuery<TRole>();
 
-        string FindByIdQuery<TKey>(TKey roleId);
+        string FindByIdQuery<TRole>();
 
-        string FindByNameQuery<TKey>(string normalizedName);
+        string FindByNameQuery<TRole>();
 
-        string UpdateRoleQuery<TRole, TRoleClaim>(TRole role, IList<TRoleClaim> claims = null);
-        string DeleteClaimsQuery<TRole, TRoleClaim>(TRole role, IList<TRoleClaim> claims = null);
-        string InsertClaimsQuery<TRole, TRoleClaim>(TRole role, IList<TRoleClaim> claims = null);
+        string UpdateRoleQuery<TRole>();
+        string DeleteClaimsQuery<TRoleClaim>();
+        string InsertClaimsQuery<TRoleClaim>();
 
     }
 }

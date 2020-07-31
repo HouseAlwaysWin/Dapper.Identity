@@ -36,7 +36,7 @@ namespace Dapper.Identity.Tables
         public virtual async Task<bool> CreateAsync(TRole role)
         {
 
-            string sql = sqlAdapter.RolesQuery.CreateQuery(role);
+            string sql = sqlAdapter.RolesQuery.CreateQuery<TRole>();
 
             //const string sql = "INSERT INTO [dbo].[AspNetRoles] " +
             //                   "VALUES (@Id, @Name, @NormalizedName, @ConcurrencyStamp);";
@@ -54,7 +54,7 @@ namespace Dapper.Identity.Tables
         public virtual async Task<bool> DeleteAsync(TKey roleId)
         {
 
-            string sql = sqlAdapter.RolesQuery.DeleteQuery(roleId);
+            string sql = sqlAdapter.RolesQuery.DeleteQuery<TRole, TKey>();
             //const string sql = "DELETE " +
             //                   "FROM [dbo].[AspNetRoles] " +
             //                   "WHERE [Id] = @Id;";
@@ -66,7 +66,7 @@ namespace Dapper.Identity.Tables
         public virtual async Task<TRole> FindByIdAsync(TKey roleId)
         {
 
-            string sql = sqlAdapter.RolesQuery.FindByIdQuery(roleId);
+            string sql = sqlAdapter.RolesQuery.FindByIdQuery<TRole>();
             //const string sql = "SELECT * " +
             //                   "FROM [dbo].[AspNetRoles] " +
             //                   "WHERE [Id] = @Id;";

@@ -12,59 +12,37 @@ namespace Dapper.Identity.SqlQueries.PostgreSqlQuery
 {
     public class RolesQuery : IRolesQuery
     {
-        public string CreateQuery<TRole, TKey>(TRole role)
-            where TRole : IdentityRole<TKey>
-            where TKey : IEquatable<TKey>
-        {
-            var roleType = typeof(TRole);
-            var tableInfo = SqlQueryHelper.GetTableNameAndSechma<TRole>();
-            List<string> colNames = SqlQueryHelper.GetColumnNames(roleType);
-
-            StringBuilder sqlStringBuilder = new StringBuilder("INSERT INTO ");
-            SqlQueryHelper.AppendTableName(ref sqlStringBuilder, tableInfo.TableName, tableInfo.Sechma);
-            sqlStringBuilder.Append(" VALUES (");
-            SqlQueryHelper.AppendColumnNamesParams(ref sqlStringBuilder, colNames);
-            sqlStringBuilder.Append(");");
-
-            return sqlStringBuilder.ToString();
-        }
-
-        public string CreateQuery<TRole>(TRole role)
+        public string CreateQuery<TRole>()
         {
             throw new NotImplementedException();
         }
 
-        public string DeleteClaimsQuery<TRole, TRoleClaim>(TRole role, IList<TRoleClaim> claims = null)
+        public string DeleteClaimsQuery<TRole, TRoleClaim>()
         {
             throw new NotImplementedException();
         }
 
-        public string DeleteQuery<TKey>(TKey roleId)
+        public string DeleteQuery<TRole, TKey>()
         {
             throw new NotImplementedException();
         }
 
-        public string FindByIdQuery<TKey>(TKey roleId)
+        public string FindByIdQuery<TRole, TKey>()
         {
             throw new NotImplementedException();
         }
 
-        public string FindByNameQuery<TKey>(string normalizedName)
+        public string FindByNameQuery<TRole, TKey>()
         {
             throw new NotImplementedException();
         }
 
-        public string InsertClaimsQuery<TRole, TRoleClaim>(TRole role, IList<TRoleClaim> claims = null)
+        public string InsertClaimsQuery<TRoleClaim>()
         {
             throw new NotImplementedException();
         }
 
-        public string UpdateAsync<TRole, TRoleClaim>(TRole role, IList<TRoleClaim> claims = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string UpdateRoleQuery<TRole, TRoleClaim>(TRole role, IList<TRoleClaim> claims = null)
+        public string UpdateRoleQuery<TRole, TRoleClaim>()
         {
             throw new NotImplementedException();
         }

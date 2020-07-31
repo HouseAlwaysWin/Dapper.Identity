@@ -1,4 +1,5 @@
 ﻿using Dapper.Identity.SqlQueries.Abstract;
+using Dapper.Identity.Tables;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -8,53 +9,76 @@ namespace Dapper.Identity.SqlQueries.SqlServerQuery
 {
     public class RolesQuery : IRolesQuery
     {
-        public string CreateQuery<TRole, TKey>(TRole role)
-            where TRole : IdentityRole<TKey>
-            where TKey : IEquatable<TKey>
+        public string CreateQuery<TRole>()
         {
-            const string sql = "INSERT INTO [dbo].[AspNetRoles] " +
-                            "VALUES (@Id, @Name, @NormalizedName, @ConcurrencyStamp);";
-            return sql;
+            var roleType = typeof(TRole);
+            var tableInfo = SqlQueryHelper.GetTableNameAndSechma<TRole>();
+            List<string> colNames = SqlQueryHelper.GetColumnNames(roleType);
+
+            StringBuilder sqlStringBuilder = new StringBuilder("INSERT INTO ");
+            sqlStringBuilder.AppendTableName(tableInfo.TableName, tableInfo.Sechma);
+            sqlStringBuilder.Append(" VALUES (");
+            sqlStringBuilder.AppendColumnNames(colNames, true);
+            sqlStringBuilder.Append(");");
+
+            return sqlStringBuilder.ToString();
         }
 
-        public string CreateQuery<TRole>(TRole role)
+        public string DeleteQuery<TRole>()
         {
-            throw new NotImplementedException();
+            var tableInfo = SqlQueryHelper.GetTableNameAndSechma<TRole>();
+            StringBuilder sqlStringBuilder = new StringBuilder("DELETE FROM ");
+            sqlStringBuilder.AppendTableName(tableInfo.TableName, tableInfo.Sechma);
+            sqlStringBuilder.Append(" WHERE [Id] = @Id");
+            return sqlStringBuilder.ToString();
         }
 
-        public string DeleteClaimsQuery<TRole, TRoleClaim>(TRole role, IList<TRoleClaim> claims = null)
+        public string FindByIdQuery<TRole>()
         {
-            throw new NotImplementedException();
+            var tableInfo = SqlQueryHelper.GetTableNameAndSechma<TRole>();
+
+            StringBuilder sqlStringBuilder = new StringBuilder("SELECT * FROM ");
+            sqlStringBuilder.AppendTableName(tableInfo.TableName, tableInfo.Sechma);
+            sqlStringBuilder.Append(" WHERE [Id] = @Id");
+            return sqlStringBuilder.ToString();
+
         }
 
-        public string DeleteQuery<TKey>(TKey roleId)
+        public string FindByNameQuery<TRole>()
         {
-            throw new NotImplementedException();
+            var tableInfo = SqlQueryHelper.GetTableNameAndSechma<TRole>();
+
+            StringBuilder sqlStringBuilder = new StringBuilder("SELECT * FROM ");
+            sqlStringBuilder.AppendTableName(tableInfo.TableName, tableInfo.Sechma);
+            sqlStringBuilder.Append(" WHERE [NormalizedName] = @NormalizedName;");
+            return sqlStringBuilder.ToString();
         }
 
-        public string FindByIdQuery<TKey>(TKey roleId)
+        public string InsertClaimsQuery<TRoleClaim>()
         {
-            throw new NotImplementedException();
+            var tableInfo = SqlQueryHelper.GetTableNameAndSechma<TRoleClaim>();
+            StringBuilder sqlStringBuilder = new StringBuilder("INSERT INTO ");
+            sqlStringBuilder.AppendTableName(tableInfo.TableName, tableInfo.Sechma);
+            sqlStringBuilder.Append("(RoleId, ClaimType, ClaimValue) VALUES (@RoleId, @ClaimType, @ClaimValue);");
+            return sqlStringBuilder.ToString();
         }
 
-        public string FindByNameQuery<TKey>(string normalizedName)
+        public string DeleteClaimsQuery<TRoleClaim>()
         {
-            throw new NotImplementedException();
+            var tableInfo = SqlQueryHelper.GetTableNameAndSechma<TRoleClaim>();
+            StringBuilder sqlStringBuilder = new StringBuilder("DELETE FROM ");
+            sqlStringBuilder.AppendTableName(tableInfo.TableName, tableInfo.Sechma);
+            sqlStringBuilder.Append(" WHERE [RoleId] = @RoleId;");
+            return sqlStringBuilder.ToString();
         }
 
-        public string InsertClaimsQuery<TRole, TRoleClaim>(TRole role, IList<TRoleClaim> claims = null)
+        public string UpdateRoleQuery<TRole>()
         {
-            throw new NotImplementedException();
-        }
-
-        public string UpdateAsync<TRole, TRoleClaim>(TRole role, IList<TRoleClaim> claims = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string UpdateRoleQuery<TRole, TRoleClaim>(TRole role, IList<TRoleClaim> claims = null)
-        {
-            throw new NotImplementedException();
+            var tableInfo = SqlQueryHelper.GetTableNameAndSechma<TRole>();
+            StringBuilder sqlStringBuilder = new StringBuilder("UPDATE ");
+            sqlStringBuilder.AppendTableName(tableInfo.TableName, tableInfo.Sechma);
+            sqlStringBuilder.Append("SET [Name] = @Name, [NormalizedName] = @NormalizedName, [ConcurrencyStamp] = @ConcurrencyStamp WHERE [Id] = @Id;");
+            return sqlStringBuilder.ToString();
         }
     }
 }

@@ -18,11 +18,8 @@ namespace Dapper.Identity.Tables
             = new Dictionary<string, ISqlAdapter>
             {
                 ["SqlServerDbConnectionFactory"] = new SqlServerAdapter(),
-                //["sqlceconnection"] = new SqlCeServerAdapter(),
                 ["PostgreSqlDbConnectionFactory"] = new PostgresAdapter(),
-                //["sqliteconnection"] = new SQLiteAdapter(),
                 ["MySqlConnectionFactory"] = new MySqlAdapter(),
-                ["FBConnectionFactory"] = new FbAdapter()
             };
 
         public delegate string GetDatabaseTypeDelegate(IDbConnectionFactory connection);
@@ -69,34 +66,29 @@ namespace Dapper.Identity.Tables
             List<string> colNames = new List<string>();
             foreach (var prop in allProperties)
             {
-                var colAttr = prop.GetCustomAttribute<ColumnNameAttribute>();
-                if (colAttr != null)
-                {
-                    var name = string.IsNullOrWhiteSpace(colAttr.Name) ? prop.Name : colAttr.Name;
-                    colNames.Add(name);
-                }
+                colNames.Add(prop.Name);
             }
             return colNames;
         }
 
-        public static void AppendTableName(ref StringBuilder sqlStringBuilder, string tableName, string sechema)
+        public static void AppendTableName(this StringBuilder sqlStringBuilder, string tableName, string sechema)
         {
-            sqlStringBuilder.Append(" [");
             sqlStringBuilder.Append(sechema);
-            sqlStringBuilder.Append("].");
-            sqlStringBuilder.Append("[");
+            sqlStringBuilder.Append(".");
             sqlStringBuilder.Append(tableName);
-            sqlStringBuilder.Append("] ");
         }
 
-        public static void AppendColumnNamesParams(ref StringBuilder sqlStringBuilder, List<string> colNames)
+        public static void AppendColumnNames(this StringBuilder sqlStringBuilder, List<string> colNames, bool isParams = false)
         {
             for (int i = 0; i < colNames.Count; i++)
             {
                 var name = colNames[i];
-                sqlStringBuilder.Append("@");
+                if (isParams)
+                {
+                    sqlStringBuilder.Append("@");
+                }
                 sqlStringBuilder.Append(name);
-                if (i == (colNames.Count - 1))
+                if (i != (colNames.Count - 1))
                 {
                     sqlStringBuilder.Append(",");
                 }
