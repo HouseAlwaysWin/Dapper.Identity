@@ -32,9 +32,10 @@ namespace Dapper.Identity.Tables
         /// <inheritdoc/>
         public virtual async Task<IEnumerable<TUserClaim>> GetClaimsAsync(TKey userId)
         {
-            const string sql = "SELECT * " +
-                               "FROM [dbo].[AspNetUserClaims] " +
-                               "WHERE [UserId] = @UserId;";
+            //const string sql = "SELECT * " +
+            //                   "FROM [dbo].[AspNetUserClaims] " +
+            //                   "WHERE [UserId] = @UserId;";
+            string sql = sqlAdapter.UserClaimsQuery.GetClaimsSql<TUserClaim>();
             var userClaims = await DbConnection.QueryAsync<TUserClaim>(sql, new { UserId = userId });
             return userClaims;
         }

@@ -34,9 +34,12 @@ namespace Dapper.Identity.Tables
         /// <inheritdoc/>
         public virtual async Task<IEnumerable<TUserLogin>> GetLoginsAsync(TKey userId)
         {
-            const string sql = "SELECT * " +
-                               "FROM [dbo].[AspNetUserLogins] " +
-                               "WHERE [UserId] = @UserId;";
+            //const string sql = "SELECT * " +
+            //                   "FROM [dbo].[AspNetUserLogins] " +
+            //                   "WHERE [UserId] = @UserId;";
+
+            string sql = sqlAdapter.UserLoginsQuery.GetLoginsSql<TUserLogin>();
+
             var userLogins = await DbConnection.QueryAsync<TUserLogin>(sql, new { UserId = userId });
             return userLogins;
         }
@@ -44,10 +47,11 @@ namespace Dapper.Identity.Tables
         /// <inheritdoc/>
         public virtual async Task<TUser> FindByLoginAsync(string loginProvider, string providerKey)
         {
-            const string sql = "SELECT [u].* " +
-                               "FROM [dbo].[AspNetUsers] AS [u] " +
-                               "INNER JOIN [dbo].[AspNetUserLogins] AS [ul] ON [ul].[UserId] = [u].[Id] " +
-                               "WHERE [ul].[LoginProvider] = @LoginProvider AND [ul].[ProviderKey] = @ProviderKey;";
+            //const string sql = "SELECT [u].* " +
+            //                   "FROM [dbo].[AspNetUsers] AS [u] " +
+            //                   "INNER JOIN [dbo].[AspNetUserLogins] AS [ul] ON [ul].[UserId] = [u].[Id] " +
+            //                   "WHERE [ul].[LoginProvider] = @LoginProvider AND [ul].[ProviderKey] = @ProviderKey;";
+            string sql = sqlAdapter.UserLoginsQuery.FindByLoginSql<TUser, TUserLogin>();
             var user = await DbConnection.QuerySingleOrDefaultAsync<TUser>(sql, new
             {
                 LoginProvider = loginProvider,
@@ -59,9 +63,10 @@ namespace Dapper.Identity.Tables
         /// <inheritdoc/>
         public virtual async Task<TUserLogin> FindUserLoginAsync(string loginProvider, string providerKey)
         {
-            const string sql = "SELECT * " +
-                               "FROM [dbo].[AspNetUserLogins] " +
-                               "WHERE [LoginProvider] = @LoginProvider AND [ProviderKey] = @ProviderKey;";
+            //const string sql = "SELECT * " +
+            //                   "FROM [dbo].[AspNetUserLogins] " +
+            //                   "WHERE [LoginProvider] = @LoginProvider AND [ProviderKey] = @ProviderKey;";
+            string sql = sqlAdapter.UserLoginsQuery.FindUserLoginSql<TUserLogin>();
             var userLogin = await DbConnection.QuerySingleOrDefaultAsync<TUserLogin>(sql, new
             {
                 LoginProvider = loginProvider,
@@ -73,9 +78,10 @@ namespace Dapper.Identity.Tables
         /// <inheritdoc/>
         public virtual async Task<TUserLogin> FindUserLoginAsync(TKey userId, string loginProvider, string providerKey)
         {
-            const string sql = "SELECT * " +
-                               "FROM [dbo].[AspNetUserLogins] " +
-                               "WHERE [UserId] = @UserId AND [LoginProvider] = @LoginProvider AND [ProviderKey] = @ProviderKey;";
+            //const string sql = "SELECT * " +
+            //                   "FROM [dbo].[AspNetUserLogins] " +
+            //                   "WHERE [UserId] = @UserId AND [LoginProvider] = @LoginProvider AND [ProviderKey] = @ProviderKey;";
+            string sql = sqlAdapter.UserLoginsQuery.FindUserLoginSql<TUserLogin>();
             var userLogin = await DbConnection.QuerySingleOrDefaultAsync<TUserLogin>(sql, new
             {
                 UserId = userId,

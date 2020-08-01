@@ -33,9 +33,10 @@ namespace Dapper.Identity.Tables
         /// <inheritdoc/>
         public virtual async Task<IEnumerable<TUserToken>> GetTokensAsync(TKey userId)
         {
-            const string sql = "SELECT * " +
-                               "FROM [dbo].[AspNetUserTokens] " +
-                               "WHERE [UserId] = @UserId;";
+            //const string sql = "SELECT * " +
+            //                   "FROM [dbo].[AspNetUserTokens] " +
+            //                   "WHERE [UserId] = @UserId;";
+            string sql = sqlAdapter.UserTokensQuery.GetTokensSql<TUserToken>();
             var userTokens = await DbConnection.QueryAsync<TUserToken>(sql, new { UserId = userId });
             return userTokens;
         }
@@ -43,9 +44,10 @@ namespace Dapper.Identity.Tables
         /// <inheritdoc/>
         public virtual async Task<TUserToken> FindTokenAsync(TKey userId, string loginProvider, string name)
         {
-            const string sql = "SELECT * " +
-                               "FROM [dbo].[AspNetUserTokens] " +
-                               "WHERE [UserId] = @UserId AND [LoginProvider] = @LoginProvider AND [Name] = @Name;";
+            //const string sql = "SELECT * " +
+            //                   "FROM [dbo].[AspNetUserTokens] " +
+            //                   "WHERE [UserId] = @UserId AND [LoginProvider] = @LoginProvider AND [Name] = @Name;";
+            string sql = sqlAdapter.UserTokensQuery.FindTokenSql<TUserToken>();
             var token = await DbConnection.QuerySingleOrDefaultAsync<TUserToken>(sql, new
             {
                 UserId = userId,

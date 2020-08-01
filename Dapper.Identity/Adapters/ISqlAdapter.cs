@@ -13,5 +13,10 @@ namespace Dapper.Identity.Adapters
     {
         IRolesQuery RolesQuery { get; }
         IUsersQuery UsersQuery { get; }
+        IUserRolesQuery UserRolesQuery { get; }
+        IUserClaimsQuery UserClaimsQuery { get; }
+        IUserLoginsQuery UserLoginsQuery { get; }
+        IRoleClaimsQuery RoleClaimsQuery { get; }
+        IUserTokensQuery UserTokensQuery { get; }
     }
 }

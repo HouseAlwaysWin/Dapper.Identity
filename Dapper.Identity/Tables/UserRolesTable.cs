@@ -34,10 +34,11 @@ namespace Dapper.Identity.Tables
         /// <inheritdoc/>
         public virtual async Task<IEnumerable<TRole>> GetRolesAsync(TKey userId)
         {
-            const string sql = "SELECT [r].* " +
-                               "FROM [dbo].[AspNetRoles] AS [r] " +
-                               "INNER JOIN [dbo].[AspNetUserRoles] AS [ur] ON [ur].[RoleId] = [r].[Id] " +
-                               "WHERE [ur].[UserId] = @UserId;";
+            //const string sql = "SELECT [r].* " +
+            //                   "FROM [dbo].[AspNetRoles] AS [r] " +
+            //                   "INNER JOIN [dbo].[AspNetUserRoles] AS [ur] ON [ur].[RoleId] = [r].[Id] " +
+            //                   "WHERE [ur].[UserId] = @UserId;";
+            string sql = sqlAdapter.UserRolesQuery.GetRolesSql<TRole, TUserRole>();
             var userRoles = await DbConnection.QueryAsync<TRole>(sql, new { UserId = userId });
             return userRoles;
         }
@@ -45,9 +46,10 @@ namespace Dapper.Identity.Tables
         /// <inheritdoc/>
         public virtual async Task<TUserRole> FindUserRoleAsync(TKey userId, TKey roleId)
         {
-            const string sql = "SELECT * " +
-                               "FROM [dbo].[AspNetUserRoles] " +
-                               "WHERE [UserId] = @UserId AND [RoleId] = @RoleId;";
+            //const string sql = "SELECT * " +
+            //                   "FROM [dbo].[AspNetUserRoles] " +
+            //                   "WHERE [UserId] = @UserId AND [RoleId] = @RoleId;";
+            string sql = sqlAdapter.UserRolesQuery.FindUserRoleSql<TRole>();
             var userRole = await DbConnection.QuerySingleOrDefaultAsync<TUserRole>(sql, new
             {
                 UserId = userId,
